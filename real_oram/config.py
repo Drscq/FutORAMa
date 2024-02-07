@@ -18,7 +18,7 @@ class config(baseConfig):
     BALL_STATUS_POSITION = BALL_DATA_SIZE
     BALL_SIZE = BALL_DATA_SIZE + 1 + KEY_SIZE
     LOG_LAMBDA = 10
-    Z = 131_220
+    Z = 1_220
     MU = int(Z/2)
     NUMBER_OF_BINS = math.ceil(N/MU)
     BIN_SIZE = 2*MU
