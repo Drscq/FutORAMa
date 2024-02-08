@@ -10,15 +10,15 @@ class config(baseConfig):
 
     
     KEY_SIZE = 16
-
+    
     #NOTE: because constructCapacityThresholdBall and deconstructCapacityThresholdBall are not well implemented, 
     # this must be an even number. to be corrected in a future version
-    BALL_DATA_SIZE = 16
+    BALL_DATA_SIZE = 2**12
     # the balls structure:  DATA || STATUS || KEY
     BALL_STATUS_POSITION = BALL_DATA_SIZE
     BALL_SIZE = BALL_DATA_SIZE + 1 + KEY_SIZE
     LOG_LAMBDA = 10
-    Z = 1_220
+    Z = 131_220
     MU = int(Z/2)
     NUMBER_OF_BINS = math.ceil(N/MU)
     BIN_SIZE = 2*MU

@@ -3,29 +3,39 @@ from real_oram.ORAM import ORAM
 from real_oram.RAM.local_RAM import local_RAM, reset_counters
 from loading_bar import update_loading_bar
 from real_oram.config import config
-import time
+from LogExecutionTime import ExecutionTimeLogger
+import os
 #our ORAM test
 def _real_oram_test(oram_size):
-
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
     oram = ORAM(oram_size)
     oram.cleanWriteMemory()
     # allocating memory shouldn't count as 'writing'...
     reset_counters()
+    path_init = 'logs/log_initial_build_number_of_blocks_'+str(oram_size)+' block_size_'+str(config.BALL_DATA_SIZE)+'_bytes.txt'
+    logger_init = ExecutionTimeLogger(path_init)
+    logger_init.start()
     oram.initial_build('testing_data')
-    start_time = time.time()
+    logger_init.stop_and_log("Initial build time ", oram_size)
+    # check if the log directory exists
+    
+    path_access = 'logs/log_accesses_number_of_blocks_'+str(oram_size)+' block_size_'+str(config.BALL_DATA_SIZE)+'_bytes.txt'
+    logger = ExecutionTimeLogger(path_access)
+    logger.start()
     for i in range(int(oram_size)-1):
         oram.access('write',int(i).to_bytes(oram.conf.KEY_SIZE,'big'),int(i+3).to_bytes(oram.conf.BALL_DATA_SIZE,'big'))
         if i % 10_000 == 0:
             update_loading_bar(i/oram_size)
-    end_time = time.time()
-    total_time = end_time - start_time
+    logger.stop_and_log("Access time ", oram_size)
+   
     # print the total time in nanoseconds
-    print('Total time:', total_time, 'seconds')
-    print('Average time per access:', total_time/oram_size, 'seconds')
-    print('Average time per access:', total_time/oram_size*10**9, 'nanoseconds')
-    # average time per access divided by oram_size
-    print('Average time per access:', total_time/oram_size, 'seconds')
-    print('Average time per access:', total_time/oram_size*10**9, 'nanoseconds')
+    # print('Total time:', total_time, 'seconds')
+    # print('Average time per access:', total_time/oram_size, 'seconds')
+    # print('Average time per access:', total_time/oram_size*10**9, 'nanoseconds')
+    # # average time per access divided by oram_size
+    # print('Average time per access:', total_time/oram_size, 'seconds')
+    # print('Average time per access:', total_time/oram_size*10**9, 'nanoseconds')
 
 
 def real_oram_test(numberOfBlocks):
